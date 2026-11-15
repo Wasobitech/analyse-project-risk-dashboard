@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Subsidized Housing Risk & Feasibility Analyzer</title>
+<link rel="stylesheet" href="styles.css">
+<!-- Lucide Icons CDN -->
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- MOBILE HEADER -->
+  <header class="mobile-topbar md-hidden">
+    <div class="brand-mini">
+      <div class="mark">RA</div>
+      <span>Risk Analyzer</span>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Buka Menu">
+      <i data-lucide="menu"></i>
+    </button>
+  </header>
+
+  <!-- SIDEBAR / NAVIGATION DRAWER -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="mark">RA</div>
+      <h1>Risk Analyzer</h1>
+      <p>Subsidized Housing Project</p>
+    </div>
+
+    <nav class="nav" role="navigation">
+      <button class="active" onclick="showPage('dashboard',this)">
+        <i data-lucide="layout-dashboard"></i> <span>Dashboard</span>
+      </button>
+      <button onclick="showPage('project',this)">
+        <i data-lucide="sliders"></i> <span>Project Input</span>
+      </button>
+      <button onclick="showPage('economics',this)">
+        <i data-lucide="pie-chart"></i> <span>Unit Economics</span>
+      </button>
+      <button onclick="showPage('cashflow',this)">
+        <i data-lucide="trending-up"></i> <span>Cash Flow</span>
+      </button>
+      <button onclick="showPage('buyer',this)">
+        <i data-lucide="users"></i> <span>Buyer / KPR</span>
+      </button>
+      <button onclick="showPage('escrow',this)">
+        <i data-lucide="shield-check"></i> <span>Escrow Analyzer</span>
+      </button>
+      <button onclick="showPage('risks',this)">
+        <i data-lucide="alert-triangle"></i> <span>Risk Register</span>
+      </button>
+      <button onclick="showPage('dd',this)">
+        <i data-lucide="check-square"></i> <span>Due Diligence</span>
+      </button>
+      <button onclick="showPage('contract',this)">
+        <i data-lucide="file-text"></i> <span>Contract Guard</span>
+      </button>
+      <button onclick="showPage('decision',this)">
+        <i data-lucide="compass"></i> <span>Decision Engine</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      Financial logic intentionally separates<br>
+      <strong>developer selling price</strong><br>
+      from <strong>contractor contract revenue</strong>[cite: 1].
+    </div>
+  </aside>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="mobile-bottom-nav md-hidden">
+    <button class="active" onclick="showPage('dashboard',this)"><i data-lucide="layout-dashboard"></i><span>Home</span></button>
+    <button onclick="showPage('project',this)"><i data-lucide="sliders"></i><span>Input</span></button>
+    <button onclick="showPage('economics',this)"><i data-lucide="pie-chart"></i><span>Econ</span></button>
+    <button onclick="showPage('cashflow',this)"><i data-lucide="trending-up"></i><span>Cash</span></button>
+    <button onclick="showPage('decision',this)"><i data-lucide="compass"></i><span>Decision</span></button>
+  </nav>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="main">
+    <header class="topbar sm-hidden">
+      <div class="topbar-title">
+        Subsidized Housing Risk & Feasibility Analyzer
+      </div>
+      <div class="status">
+        <span class="dot"></span>
+        Analytical Model Active[cite: 1]
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- DASHBOARD PAGE -->
+      <section id="dashboard" class="page active">
+        <div class="page-header">
+          <h2>Project Risk Dashboard</h2>
+          <p>Executive view untuk menilai apakah kontraktor layak masuk ke proyek[cite: 1].</p>
+        </div>
+
+        <div class="alert alert-danger">
+          <strong>Critical finding[cite: 1]</strong>
+          Kontraktor tidak boleh menganggap harga jual rumah subsidi sebagai revenue kontraktor.
+          Revenue kontraktor harus berasal dari <strong>nilai kontrak konstruksi</strong>[cite: 1].
+        </div>
+
+        <div class="grid grid-4">
+          <div class="card metric blue">
+            <div class="label">Project Units</div>
+            <div class="value" id="dashUnits">30</div>
+            <div class="sub">Batch analisis aktif[cite: 1]</div>
+          </div>
+          <div class="card metric orange">
+            <div class="label">Project Cost</div>
+            <div class="value" id="dashCost">Rp2,00 M</div>
+            <div class="sub">Estimasi all-in[cite: 1]</div>
+          </div>
+          <div class="card metric green">
+            <div class="label">Contract Revenue</div>
+            <div class="value" id="dashRevenue">Rp0</div>
+            <div class="sub">Belum ditentukan[cite: 1]</div>
+          </div>
+          <div class="card metric red">
+            <div class="label">Risk Score</div>
+            <div class="value" id="dashRisk">—</div>
+            <div class="sub">Menunggu input[cite: 1]</div>
+          </div>
+        </div>
+
+        <br>
+
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="section-title">
+              <h3>Financial Position</h3>
+              <span>Model terkoreksi[cite: 1]</span>
+            </div>
+            <div class="bar-row">
+              <div class="bar-head"><span>Physical construction cost</span><strong id="physicalPct">90%</strong></div>
+              <div class="bar"><span id="physicalBar" style="width:90%"></span></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-head"><span>Other / permits / project costs</span><strong id="otherPct">10%</strong></div>
+              <div class="bar"><span id="otherBar" style="width:10%"></span></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-head"><span>Contractor gross margin</span><strong id="marginPct">0%</strong></div>
+              <div class="bar"><span id="marginBar" style="width:0%"></span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-title">
+              <h3>Decision Snapshot</h3>
+              <span>Preliminary[cite: 1]</span>
+            </div>
+            <div id="dashDecision" class="alert alert-warning">
+              Masukkan nilai kontrak dan status proteksi pembayaran untuk memperoleh keputusan[cite: 1].
+            </div>
+            <div class="actions">
+              <button class="btn btn-primary" onclick="showPage('project')">Configure Project</button>
+              <button class="btn btn-light" onclick="showPage('decision')">Open Decision Engine</button>
+            </div>
+          </div>
+        </div>
+
+        <br>
+
+        <div class="card">
+          <div class="section-title">
+            <h3>Executive Risk Map</h3>
+            <span>Highest priority[cite: 1]</span>
+          </div>
+          <div class="risk">
+            <div class="risk-score high">CR</div>
+            <div>
+              <h4>Contractor menjadi penyandang dana[cite: 1]</h4>
+              <p>Jika kontraktor mengeluarkan dana pembangunan terlebih dahulu sementara pembayaran baru terjadi setelah akad buyer, risiko likuiditas dan risiko developer berpindah ke kontraktor[cite: 1].</p>
+            </div>
+          </div>
+          <div class="risk">
+            <div class="risk-score high">CR</div>
+            <div>
+              <h4>Payment dependency pada akad[cite: 1]</h4>
+              <p>Akad buyer adalah event eksternal yang tidak sepenuhnya dikendalikan kontraktor. Kontrak harus menentukan apakah developer tetap wajib membayar pekerjaan yang telah selesai[cite: 1].</p>
+            </div>
+          </div>
+          <div class="risk">
+            <div class="risk-score medium">MD</div>
+            <div>
+              <h4>Escrow / rekening bersama[cite: 1]</h4>
+              <p>Rekening bersama bukan jaminan otomatis. Yang menentukan adalah siapa menguasai dana, kapan dana dapat dicairkan, dan apakah developer dapat memblokir pencairan[cite: 1].</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROJECT CONFIGURATION PAGE -->
+      <section id="project" class="page">
+        <div class="page-header">
+          <h2>Project Configuration</h2>
+          <p>Masukkan angka aktual dari developer. Jangan menggunakan harga jual sebagai nilai kontrak[cite: 1].</p>
+        </div>
+        <div class="card">
+          <div class="section-title">
+            <h3>Core Project Inputs</h3>
+            <span>Editable assumptions[cite: 1]</span>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label>Jumlah unit batch</label>
+              <input id="units" type="number" value="30" min="1" onchange="calculate()">
+              <small>Contoh: 10 atau 30 unit[cite: 1].</small>
+            </div>
+            <div class="field">
+              <label>Biaya konstruksi fisik / unit</label>
+              <input id="physicalUnit" type="number" value="60000000" onchange="calculate()">
+              <small>Estimasi awal Rp60 juta[cite: 1].</small>
+            </div>
+            <div class="field">
+              <label>Total biaya proyek all-in</label>
+              <input id="projectCost" type="number" value="2000000000" onchange="calculate()">
+              <small>Termasuk biaya non-fisik sesuai RAB[cite: 1].</small>
+            </div>
+            <div class="field">
+              <label>Nilai kontrak konstruksi / unit</label>
+              <input id="contractUnit" type="number" value="70000000" onchange="calculate()">
+              <small>INI revenue kontraktor[cite: 1].</small>
+            </div>
+            <div class="field">
+              <label>Contingency / reserve</label>
+              <input id="contingency" type="number" value="10" onchange="calculate()">
+              <small>Persentase terhadap biaya proyek[cite: 1].</small>
+            </div>
+            <div class="field">
+              <label>Developer payment dependency</label>
+              <select id="paymentDependency" onchange="calculate()">
+                <option value="akad">Hanya setelah akad buyer</option>
+                <option value="progress">Progress / milestone</option>
+                <option value="mixed">Mixed</option>
+              </select>
+            </div>
+          </div>
+          <br>
+          <div class="actions">
+            <button class="btn btn-blue" onclick="calculate();showPage('economics')">Run Financial Analysis</button>
+            <button class="btn btn-light" onclick="resetProject()">Reset</button>
+          </div>
+        </div>
+        <br>
+        <div class="alert alert-info">
+          <strong>Important distinction[cite: 1]</strong>
+          Harga jual rumah subsidi boleh dipakai untuk menilai ekonomi developer, tetapi tidak boleh dimasukkan sebagai pendapatan kontraktor kecuali memang secara kontrak kontraktor mendapatkan hak ekonomi sebesar itu[cite: 1].
+        </div>
+      </section>
+
+      <!-- UNIT ECONOMICS PAGE -->
+      <section id="economics" class="page">
+        <div class="page-header">
+          <h2>Unit Economics</h2>
+          <p>Analisis pendapatan kontraktor berdasarkan nilai kontrak konstruksi[cite: 1].</p>
+        </div>
+        <div class="grid grid-4">
+          <div class="card metric blue">
+            <div class="label">Revenue</div>
+            <div class="value" id="econRevenue">Rp0</div>
+            <div class="sub">Nilai kontrak[cite: 1]</div>
+          </div>
+          <div class="card metric orange">
+            <div class="label">Cost</div>
+            <div class="value" id="econCost">Rp0</div>
+            <div class="sub">All-in project cost[cite: 1]</div>
+          </div>
+          <div class="card metric green">
+            <div class="label">Gross Profit</div>
+            <div class="value" id="econProfit">Rp0</div>
+            <div class="sub">Revenue - cost[cite: 1]</div>
+          </div>
+          <div class="card metric red">
+            <div class="label">Gross Margin</div>
+            <div class="value" id="econMargin">0%</div>
+            <div class="sub">Before financing & tax[cite: 1]</div>
+          </div>
+        </div>
+        <br>
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="section-title"><h3>Per Unit Economics</h3></div>
+            <div class="table-wrap">
+              <table>
+                <tbody>
+                  <tr><td>Physical construction</td><td class="num" id="unitPhysical">Rp0</td></tr>
+                  <tr><td>All-in project cost</td><td class="num" id="unitCost">Rp0</td></tr>
+                  <tr><td>Contract revenue</td><td class="num" id="unitRevenue">Rp0</td></tr>
+                  <tr><td>Gross profit / unit</td><td class="num" id="unitProfit">Rp0</td></tr>
+                  <tr><td>Gross margin</td><td class="num" id="unitMargin">0%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-title"><h3>Contract Price Sensitivity</h3><span>30-unit reference[cite: 1]</span></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Contract / Unit</th><th>Revenue</th><th>Gross Profit</th><th>Margin</th></tr></thead>
+                <tbody id="sensitivityTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="alert alert-warning">
+          <strong>Interpretation[cite: 1]</strong>
+          Nilai kontrak Rp70 juta/unit terhadap biaya all-in rata-rata Rp66,67 juta/unit hanya menghasilkan sekitar Rp100 juta gross profit untuk 30 unit, sebelum financing cost, overhead tambahan, pajak, warranty, dan contingency[cite: 1].
+        </div>
+      </section>
+
+      <!-- CASH FLOW PAGE -->
+      <section id="cashflow" class="page">
+        <div class="page-header">
+          <h2>Cash Flow Simulator</h2>
+          <p>Simulasi risiko ketika kontraktor harus membiayai pembangunan sebelum menerima pembayaran[cite: 1].</p>
+        </div>
+        <div class="card">
+          <div class="form-grid">
+            <div class="field">
+              <label>Persentase biaya yang harus didanai di muka</label>
+              <input id="fundingPct" type="number" value="100" min="0" max="100" onchange="calculateCashflow()">
+            </div>
+            <div class="field">
+              <label>Delay pembayaran (hari)</label>
+              <input id="delayDays" type="number" value="90" min="0" onchange="calculateCashflow()">
+            </div>
+            <div class="field">
+              <label>Cost of capital / tahun</label>
+              <input id="capitalCost" type="number" value="10" min="0" step=".1" onchange="calculateCashflow()">
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="grid grid-4">
+          <div class="card metric red">
+            <div class="label">Peak Funding</div>
+            <div class="value" id="peakFunding">Rp0</div>
+            <div class="sub">Dana kontraktor[cite: 1]</div>
+          </div>
+          <div class="card metric orange">
+            <div class="label">Financing Cost</div>
+            <div class="value" id="finCost">Rp0</div>
+            <div class="sub">Estimasi selama delay[cite: 1]</div>
+          </div>
+          <div class="card metric blue">
+            <div class="label">Effective Cost</div>
+            <div class="value" id="effectiveCost">Rp0</div>
+            <div class="sub">Cost + financing[cite: 1]</div>
+          </div>
+          <div class="card metric green">
+            <div class="label">Risk-adjusted Profit</div>
+            <div class="value" id="riskProfit">Rp0</div>
+            <div class="sub">After financing[cite: 1]</div>
+          </div>
+        </div>
+        <br>
+        <div class="card">
+          <div class="section-title"><h3>Delay Sensitivity</h3><span>Capital cost simulation[cite: 1]</span></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Delay</th><th>Financing Cost</th><th>Effective Cost</th><th>Profit</th></tr></thead>
+              <tbody id="delayTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- BUYER / KPR PAGE -->
+      <section id="buyer" class="page">
+        <div class="page-header">
+          <h2>Buyer / KPR Risk</h2>
+          <p>Jangan menganggap “70 siap akad” sama dengan 70 akad yang pasti terjadi[cite: 1].</p>
+        </div>
+        <div class="card">
+          <div class="form-grid">
+            <div class="field">
+              <label>Total buyer pipeline</label>
+              <input id="buyers" type="number" value="70" min="0" onchange="calculateBuyer()">
+            </div>
+            <div class="field">
+              <label>Buyer dalam batch</label>
+              <input id="batchBuyers" type="number" value="30" min="1" onchange="calculateBuyer()">
+            </div>
+            <div class="field">
+              <label>Estimated failure / delay rate</label>
+              <input id="failureRate" type="number" value="10" min="0" max="100" onchange="calculateBuyer()">
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="grid grid-3">
+          <div class="card metric blue">
+            <div class="label">Buyer Assumed</div>
+            <div class="value" id="buyerGood">0</div>
+            <div class="sub">Dalam batch[cite: 1]</div>
+          </div>
+          <div class="card metric red">
+            <div class="label">At Risk</div>
+            <div class="value" id="buyerRisk">0</div>
+            <div class="sub">Delay / rejection[cite: 1]</div>
+          </div>
+          <div class="card metric orange">
+            <div class="label">Potential Unpaid Work</div>
+            <div class="value" id="unpaidWork">Rp0</div>
+            <div class="sub">Jika payment bergantung akad[cite: 1]</div>
+          </div>
+        </div>
+        <br>
+        <div class="alert alert-danger">
+          <strong>Critical contract question[cite: 1]</strong>
+          Jika 30 rumah sudah dibangun tetapi hanya 27 buyer yang akad, apakah developer tetap wajib membayar 30 unit kepada kontraktor? Jika jawabannya tidak jelas, kontraktor sedang mengambil risiko buyer/KPR[cite: 1].
+        </div>
+        <div class="card">
+          <div class="section-title"><h3>Buyer Status Framework</h3></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Status</th><th>Makna</th><th>Risk Level</th></tr></thead>
+              <tbody>
+                <tr><td>Lead</td><td>Baru menyatakan minat[cite: 1].</td><td><span class="high">HIGH</span></td></tr>
+                <tr><td>PPJB</td><td>Sudah ada perjanjian pendahuluan[cite: 1].</td><td><span class="medium">MEDIUM</span></td></tr>
+                <tr><td>KPR submitted</td><td>Pengajuan pembiayaan telah masuk[cite: 1].</td><td><span class="medium">MEDIUM</span></td></tr>
+                <tr><td>Approved</td><td>Bank menyatakan pembiayaan disetujui[cite: 1].</td><td><span class="low">LOWER</span></td></tr>
+                <tr><td>Akad scheduled</td><td>Akad sudah memiliki jadwal[cite: 1].</td><td><span class="low">LOWER</span></td></tr>
+                <tr><td>Akad completed</td><td>Akad benar-benar telah selesai[cite: 1].</td><td><span class="low">LOW</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ESCROW ANALYZER PAGE -->
+      <section id="escrow" class="page">
+        <div class="page-header">
+          <h2>Escrow / Rekening Bersama Analyzer</h2>
+          <p>Menguji apakah rekening bersama benar-benar memberi perlindungan kepada kontraktor[cite: 1].</p>
+        </div>
+        <div class="alert alert-warning">
+          <strong>Principle[cite: 1]</strong>
+          “Dana ada di rekening bersama” tidak otomatis berarti “kontraktor pasti dibayar”. Yang harus dianalisis adalah <strong>mekanisme release</strong>[cite: 1].
+        </div>
+        <div class="card">
+          <div class="section-title"><h3>Escrow Control Questions</h3></div>
+          <div id="escrowQuestions"></div>
+        </div>
+        <br>
+        <div class="card">
+          <div class="section-title"><h3>Escrow Protection Score</h3><span id="escrowScore">0 / 100</span></div>
+          <div class="progress"><span id="escrowBar" style="width:0%"></span></div>
+          <br>
+          <div id="escrowInterpretation" class="alert alert-warning">Lengkapi pertanyaan escrow[cite: 1].</div>
+        </div>
+      </section>
+
+      <!-- RISK REGISTER PAGE -->
+      <section id="risks" class="page">
+        <div class="page-header">
+          <h2>Risk Register</h2>
+          <p>Prioritas risiko yang harus dikendalikan sebelum dana proyek ditempatkan[cite: 1].</p>
+        </div>
+        <div class="grid grid-3">
+          <div class="card metric red">
+            <div class="label">Critical</div>
+            <div class="value">5</div>
+            <div class="sub">Harus ditutup sebelum GO[cite: 1]</div>
+          </div>
+          <div class="card metric orange">
+            <div class="label">Major</div>
+            <div class="value">6</div>
+            <div class="sub">Harus punya mitigasi[cite: 1]</div>
+          </div>
+          <div class="card metric blue">
+            <div class="label">Monitoring</div>
+            <div class="value">4</div>
+            <div class="sub">Pantau selama proyek[cite: 1]</div>
+          </div>
+        </div>
+        <br>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Risk</th><th>Category</th><th>Impact</th><th>Required Control</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Developer default</strong></td><td>Financial / Legal[cite: 1]</td><td>Critical[cite: 1]</td><td>Jaminan pembayaran, security, due diligence developer[cite: 1].</td></tr>
+                <tr><td><strong>Payment tied to buyer akad</strong></td><td>Commercial[cite: 1]</td><td>Critical[cite: 1]</td><td>Developer tetap wajib membayar pekerjaan yang telah diterima[cite: 1].</td></tr>
+                <tr><td><strong>Land encumbrance</strong></td><td>Legal[cite: 1]</td><td>Critical[cite: 1]</td><td>Verifikasi sertifikat, hak tanggungan, sengketa dan status penguasaan[cite: 1].</td></tr>
+                <tr><td><strong>Permit incomplete</strong></td><td>Legal / Technical[cite: 1]</td><td>Critical[cite: 1]</td><td>Condition precedent sebelum konstruksi dan funding[cite: 1].</td></tr>
+                <tr><td><strong>Escrow release blocked</strong></td><td>Financial / Contract[cite: 1]</td><td>Critical[cite: 1]</td><td>Release mechanism objektif dan tertulis[cite: 1].</td></tr>
+                <tr><td><strong>Material escalation</strong></td><td>Construction[cite: 1]</td><td>Major[cite: 1]</td><td>Price adjustment / contingency / procurement strategy[cite: 1].</td></tr>
+                <tr><td><strong>Buyer KPR rejection</strong></td><td>KPR[cite: 1]</td><td>Major[cite: 1]</td><td>Verifikasi status buyer sebelum batch dimulai[cite: 1].</td></tr>
+                <tr><td><strong>Construction delay</strong></td><td>Operational[cite: 1]</td><td>Major[cite: 1]</td><td>Schedule buffer, milestone, liquidated damages yang proporsional[cite: 1].</td></tr>
+                <tr><td><strong>Tax mismatch</strong></td><td>Tax[cite: 1]</td><td>Major[cite: 1]</td><td>Review transaksi oleh konsultan pajak[cite: 1].</td></tr>
+                <tr><td><strong>Warranty / defect</strong></td><td>Technical[cite: 1]</td><td>Major[cite: 1]</td><td>Spesifikasi, QA/QC dan batas tanggung jawab jelas[cite: 1].</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- DUE DILIGENCE PAGE -->
+      <section id="dd" class="page">
+        <div class="page-header">
+          <h2>Due Diligence Checklist</h2>
+          <p>Jangan transfer dana sebelum critical documents terverifikasi[cite: 1].</p>
+        </div>
+        <div class="card">
+          <div id="checklist"></div>
+          <br>
+          <div class="section-title"><h3>Readiness</h3><span id="ddScore">0%</span></div>
+          <div class="progress"><span id="ddBar" style="width:0%"></span></div>
+        </div>
+      </section>
+
+      <!-- CONTRACT GUARD PAGE -->
+      <section id="contract" class="page">
+        <div class="page-header">
+          <h2>Contract Guard</h2>
+          <p>Kontrol minimum yang harus muncul dalam struktur kontrak[cite: 1].</p>
+        </div>
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="section-title"><h3>Payment Protection</h3></div>
+            <div class="check-item">
+              <input type="checkbox" class="contractCheck">
+              <label>Pembayaran berdasarkan progress/milestone.<small>Bukan semata-mata berdasarkan akad buyer[cite: 1].</small></label>
+            </div>
+            <div class="check-item">
+              <input type="checkbox" class="contractCheck">
+              <label>Developer memiliki kewajiban pembayaran unconditional setelah pekerjaan diterima[cite: 1].</label>
+            </div>
+            <div class="check-item">
+              <input type="checkbox" class="contractCheck">
+              <label>Ada mekanisme late payment compensation[cite: 1].</label>
+            </div>
+            <div class="check-item">
+              <input type="checkbox" class="contractCheck">
+              <label>Retention memiliki batas dan tanggal pelepasan yang jelas[cite: 1].</label>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-title"><h3>Legal Protection</h3></div>
+            <div class="check-item">
+              <input type="checkbox" class="contractCheck">
+              <label>Scope dan BoQ terkunci[cite: 1].</label>
+            </div>
+            <div class="check-item">
+              <input type="checkbox" class="contractCheck">
+              <label>Variation order memiliki prosedur tertulis[cite: 1].</label>
+            </div>
+            <div class="check-item">
+              <input type="checkbox" class="contractCheck">
+              <label>Termination dan suspension rights jelas[cite: 1].</label>
+            </div>
+            <div class="check-item">
+              <input type="checkbox" class="contractCheck">
+              <label>Force majeure dan dispute resolution jelas[cite: 1].</label>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="card">
+          <div class="section-title"><h3>Positioning Principle</h3></div>
+          <div class="alert alert-info">
+            <strong>Kontraktor mengambil risiko konstruksi, bukan otomatis risiko developer[cite: 1].</strong>
+            Jika developer meminta kontraktor menyediakan seluruh modal, maka kontraktor sebenarnya memberikan fasilitas pembiayaan kepada developer. Risiko tersebut harus dihargai dan dijamin secara kontraktual[cite: 1].
+          </div>
+        </div>
+      </section>
+
+      <!-- DECISION ENGINE PAGE -->
+      <section id="decision" class="page">
+        <div class="page-header">
+          <h2>Decision Engine</h2>
+          <p>Keputusan investasi berdasarkan ekonomi proyek dan proteksi risiko[cite: 1].</p>
+        </div>
+        <div id="decisionBox" class="decision conditional">
+          <h2 id="decisionTitle">CONDITIONAL GO</h2>
+          <p id="decisionText">Keputusan akan dihitung berdasarkan nilai kontrak, margin, payment dependency, escrow dan due diligence[cite: 1].</p>
+        </div>
+        <br>
+        <div class="grid grid-3">
+          <div class="card metric">
+            <div class="label">Economic Score</div>
+            <div class="value" id="economicScore">—</div>
+            <div class="sub">Profitability[cite: 1]</div>
+          </div>
+          <div class="card metric">
+            <div class="label">Payment Score</div>
+            <div class="value" id="paymentScore">—</div>
+            <div class="sub">Cash flow protection[cite: 1]</div>
+          </div>
+          <div class="card metric">
+            <div class="label">Readiness Score</div>
+            <div class="value" id="readinessScore">—</div>
+            <div class="sub">Due diligence[cite: 1]</div>
+          </div>
+        </div>
+        <br>
+        <div class="card">
+          <div class="section-title"><h3>Decision Logic</h3></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Condition</th><th>Interpretation</th></tr></thead>
+              <tbody>
+                <tr><td>Margin negatif</td><td><strong>NO-GO</strong>[cite: 1]</td></tr>
+                <tr><td>Payment hanya setelah akad + tidak ada guarantee</td><td><strong>NO-GO / sangat berisiko</strong>[cite: 1]</td></tr>
+                <tr><td>Escrow tidak memiliki release mechanism objektif</td><td><strong>NO-GO</strong>[cite: 1]</td></tr>
+                <tr><td>Legalitas tanah / izin belum jelas</td><td><strong>NO-GO</strong>[cite: 1]</td></tr>
+                <tr><td>Margin positif + milestone payment + security</td><td><strong>Potential GO</strong>[cite: 1]</td></tr>
+                <tr><td>Buyer pipeline kuat tetapi belum fully approved</td><td><strong>CONDITIONAL GO</strong>[cite: 1]</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <br>
+        <div class="alert alert-danger">
+          <strong>Default recommendation[cite: 1]</strong>
+          Jangan menempatkan dana Rp2 miliar hanya karena developer memiliki 70 calon buyer. Yang harus dibuktikan adalah: <strong>siapa yang wajib membayar kontraktor, kapan kewajiban tersebut jatuh tempo, dan apa jaminannya[cite: 1].</strong>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
